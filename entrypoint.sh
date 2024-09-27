@@ -27,7 +27,7 @@ echo
 cat /hs/svr_1/handle-dspace-plugin.cfg
 echo
 
-sed -i "s/DSPACE_SERVER_URL/${DSPACE_SERVER_URL}/g" /hs/svr_1/handle-dspace-plugin.cfg
+sed -i "s|DSPACE_SERVER_URL|${DSPACE_SERVER_URL}|g" /hs/svr_1/handle-dspace-plugin.cfg
 
 echo
 cat /hs/svr_1/handle-dspace-plugin.cfg
