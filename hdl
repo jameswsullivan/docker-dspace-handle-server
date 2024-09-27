@@ -39,7 +39,7 @@ shift
 case $COMMAND in
     server)
       # this is the server startup; memory configuration can be edited here
-      exec java -Xmx200M -server -cp "${CP}" -Dlog4j.configuration=file:///hs/svr_1/log4j-handle-plugin.properties -Ddspace.handle.plugin.configuration=/hs/svr_1/handle-dspace-plugin.cfg net.handle.server.Main "$@"
+      exec java ${JAVA_OPTS} -server -cp "${CP}" -Dlog4j.configuration=file:///hs/svr_1/log4j-handle-plugin.properties -Ddspace.handle.plugin.configuration=/hs/svr_1/handle-dspace-plugin.cfg net.handle.server.Main "$@"
       ;;
     setup-server)
       exec java -cp "${CP}" net.handle.server.SimpleSetup "$@"
