@@ -31,8 +31,9 @@ sed -i "s|DSPACE_SERVER_URL|${DSPACE_SERVER_URL}|g" /hs/svr_1/handle-dspace-plug
 
 echo
 cat /hs/svr_1/handle-dspace-plugin.cfg
-
 echo
+echo
+
 echo 'Done configuring "/hs/svr_1/handle-dspace-plugin.cfg" .'
 echo
 

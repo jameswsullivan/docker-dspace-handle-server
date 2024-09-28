@@ -28,6 +28,7 @@ services:
         - HANDLE_PREFIX=${HANDLE_PREFIX}
         - LOG_ROTATION_FREQUENCY_LONG=${LOG_ROTATION_FREQUENCY_LONG}
         - DSPACE_SERVER_URL=${DSPACE_SERVER_URL}
+        - JAVA_OPTS=${JAVA_OPTS}
     ports:
       - ${HTTP_PORT}:${HTTP_PORT}
       - ${TCP_UDP_PORT}:${TCP_UDP_PORT}
@@ -39,3 +40,10 @@ services:
       HANDLE_PREFIX: ${HANDLE_PREFIX}
       LOG_ROTATION_FREQUENCY_LONG: ${LOG_ROTATION_FREQUENCY_LONG}
       DSPACE_SERVER_URL: ${DSPACE_SERVER_URL}
+      JAVA_OPTS: ${JAVA_OPTS}
+    volumes:
+      - logs:/hs/svr_1/logs
+
+volumes:
+  logs:
+    driver: local
