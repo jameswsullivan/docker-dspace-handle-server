@@ -13,7 +13,8 @@ sed -i "s/HTTP_PORT/${HTTP_PORT}/g" /hs/svr_1/config.dct
 sed -i "s/LOG_ACCESS/${LOG_ACCESS}/g" /hs/svr_1/config.dct
 sed -i "s/TCP_UDP_PORT/${TCP_UDP_PORT}/g" /hs/svr_1/config.dct
 sed -i "s/LOG_ROTATION_FREQUENCY_LONG/${LOG_ROTATION_FREQUENCY_LONG}/g" /hs/svr_1/config.dct
-sed -i "s/YOUR_PREFIX/${HANDLE_PREFIX}/g" /hs/svr_1/config.dct
+sed -i "s|PREFIXES_ADMINS|${PREFIXES_ADMINS}|g" /hs/svr_1/config.dct
+sed -i "s|HANDLE_PREFIXES|${HANDLE_PREFIXES}|g" /hs/svr_1/config.dct
 
 echo '"/hs/svr_1/config.dct" content after :'
 echo
@@ -27,7 +28,7 @@ echo
 cat /hs/svr_1/handle-dspace-plugin.cfg
 echo
 
-sed -i "s|DSPACE_SERVER_URL|${DSPACE_SERVER_URL}|g" /hs/svr_1/handle-dspace-plugin.cfg
+printf "%b" "$DSPACE_SERVER_URLS" > /hs/svr_1/handle-dspace-plugin.cfg
 
 echo
 cat /hs/svr_1/handle-dspace-plugin.cfg

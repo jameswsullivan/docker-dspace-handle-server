@@ -35,11 +35,11 @@
 
   "server_config" = {
     "server_admins" = (
-      "300:0.NA/YOUR_PREFIX"     
+      PREFIXES_ADMINS     
     )
 
     "replication_admins" = (
-      "300:0.NA/YOUR_PREFIX"
+      PREFIXES_ADMINS
     )
 
     "max_session_time" = "86400000"
@@ -48,7 +48,7 @@
     "server_admin_full_access" = "yes"
     "case_sensitive" = "no"
     "auto_homed_prefixes" = (
-      "0.NA/YOUR_PREFIX"
+      HANDLE_PREFIXES
     )
 
     "storage_type" = "CUSTOM"
