@@ -1,4 +1,10 @@
-FROM ubuntu:24.04
+FROM alpine:3.21.3
+
+# Basic ENVs :
+ENV LC_ALL="en_US.UTF-8"
+ENV LANG="en_US.UTF-8"
+ENV LANGUAGE="en_US.UTF-8"
+ENV TZ="America/Chicago"
 
 # Build args (for config.dct) :
 ARG PRIMARY_SERVER
@@ -25,11 +31,6 @@ ARG LOG_ROTATION_FREQUENCY_LONG
 ARG DSPACE_SERVER_URLS
 ARG JAVA_OPTS
 
-# Basic ENVs :
-ENV DEBIAN_FRONTEND="noninteractive"
-ENV LC_ALL="en_US.UTF-8"
-ENV LANG="en_US.UTF-8"
-
 # Configurable settings in config.dct :
 ENV BIND_IP=${BIND_IP}
 ENV HTTP_PORT=${HTTP_PORT}
@@ -42,21 +43,19 @@ ENV DSPACE_SERVER_URLS=${DSPACE_SERVER_URLS}
 ENV JAVA_OPTS=${JAVA_OPTS}
 
 # Install basic packages :
-RUN apt-get update -y && \
-    apt-get upgrade -y && \
-    apt-get install -y wget nano curl unzip tzdata locales ca-certificates && \
-    apt-get upgrade ca-certificates -y && \
-    apt-get install -y iputils-ping iproute2 net-tools && \
-    ln -fs /usr/share/zoneinfo/America/Chicago /etc/localtime && \
-    locale-gen en_US.UTF-8 && \
-    update-locale LANG=en_US.UTF-8
+RUN apk update && apk upgrade && \
+    apk add --no-cache musl-locales musl-locales-lang tzdata ca-certificates && \
+    apk add --no-cache curl wget nano unzip git bash && \
+    update-ca-certificates
 
 # Install handle-server :
-RUN apt-get install -y default-jdk && \
-    mkdir /hs /hs/svr_1 /hs/svr_1/logs && \
-    rm -f /hs/handle-9.3.1/bin/hdl
+RUN apk add --no-cache openjdk21-jdk && \
+    mkdir /hs /hs/svr_1 /hs/svr_1/logs
 
 COPY handle-9.3.1 /hs/handle-9.3.1
+
+RUN rm -f /hs/handle-9.3.1/bin/hdl
+
 COPY dspace-remote-handle-resolver-1.0.jar /hs/handle-9.3.1/lib/
 COPY hdl /hs/handle-9.3.1/bin/
 
