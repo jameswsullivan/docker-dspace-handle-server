@@ -43,6 +43,8 @@ echo
 
 /hs/handle-9.3.1/bin/hdl-server /hs/svr_1 &
 
+sleep 5
+
 echo 'Handle server started ...'
 echo
 
