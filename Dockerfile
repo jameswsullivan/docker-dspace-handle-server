@@ -1,4 +1,4 @@
-FROM alpine:3.21.3
+FROM alpine:3.22.2
 
 # Basic ENVs :
 ENV LC_ALL="en_US.UTF-8"
@@ -52,12 +52,12 @@ RUN apk update && apk upgrade && \
 RUN apk add --no-cache openjdk21-jdk && \
     mkdir /hs /hs/svr_1 /hs/svr_1/logs
 
-COPY handle-9.3.1 /hs/handle-9.3.1
+COPY handle-9.3.2 /hs/handle-9.3.2
 
-RUN rm -f /hs/handle-9.3.1/bin/hdl
+RUN rm -f /hs/handle-9.3.2/bin/hdl
 
-COPY dspace-remote-handle-resolver-1.0.jar /hs/handle-9.3.1/lib/
-COPY hdl /hs/handle-9.3.1/bin/
+COPY dspace-remote-handle-resolver-1.0.jar /hs/handle-9.3.2/lib/
+COPY hdl /hs/handle-9.3.2/bin/
 
 # Generate hdl setup server answer file :
 RUN touch /hs/hdl-setup-server-answers.txt && \
@@ -82,7 +82,7 @@ RUN touch /hs/hdl-setup-server-answers.txt && \
 
 # Configure handle server configs :
 RUN rm -rf /hs/svr_1/* && \
-    /hs/handle-9.3.1/bin/hdl-setup-server /hs/svr_1 < /hs/hdl-setup-server-answers.txt && \
+    /hs/handle-9.3.2/bin/hdl-setup-server /hs/svr_1 < /hs/hdl-setup-server-answers.txt && \
     rm -f /hs/svr_1/config.dct
 
 COPY config.dct /hs/svr_1/
