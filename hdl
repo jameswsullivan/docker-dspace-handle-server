@@ -8,9 +8,9 @@ while [ -L "$PRG" ]; do
     ls=`/bin/ls -ld "$PRG"`
     link=`/usr/bin/expr "$ls" : '.*-> \(.*\)$'`
     if /usr/bin/expr "$link" : '/' > /dev/null; then
-        PRG="$link"
+	PRG="$link"
     else
-        PRG="`/usr/bin/dirname $PRG`/$link"
+	PRG="`/usr/bin/dirname $PRG`/$link"
     fi
 done
 
@@ -39,7 +39,7 @@ shift
 case $COMMAND in
     server)
       # this is the server startup; memory configuration can be edited here
-      exec java ${JAVA_OPTS} -server -cp "${CP}" -Dlog4j.configuration=file:///hs/svr_1/log4j-handle-plugin.properties -Ddspace.handle.plugin.configuration=/hs/svr_1/handle-dspace-plugin.cfg net.handle.server.Main "$@"
+      exec java ${JAVA_OPTS} -server -cp "${CP}" -Dlog4j.configurationFile=file:///hs/svr_1/log4j2-handle-plugin.xml -Ddspace.handle.plugin.configuration=/hs/svr_1/handle-dspace-plugin.cfg net.handle.server.Main "$@"
       ;;
     setup-server)
       exec java -cp "${CP}" net.handle.server.SimpleSetup "$@"
@@ -142,6 +142,9 @@ case $COMMAND in
       ;;
     migrate-storage-to-bdbje)
       exec java -cp "${CP}" net.handle.apps.tools.CurrentStorageToBdbjeMigrator "$@"
+      ;;
+    migrate-storage)
+      exec java -cp "${CP}" net.handle.apps.tools.StorageMigrationTool "$@"
       ;;
     *)
       echo "Unknown Handle.Net server command: ${COMMAND}"
