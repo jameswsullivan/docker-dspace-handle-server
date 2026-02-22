@@ -38,10 +38,10 @@ echo
 echo 'Done configuring "/hs/svr_1/handle-dspace-plugin.cfg" .'
 echo
 
-echo 'Starting handle-server: "/hs/handle-9.3.2/bin/hdl-server /hs/svr_1"'
+echo 'Starting handle-server: "/hs/handle-9.3.3/bin/hdl-server /hs/svr_1"'
 echo
 
-/hs/handle-9.3.2/bin/hdl-server /hs/svr_1 &
+/hs/handle-9.3.3/bin/hdl-server /hs/svr_1 &
 
 sleep 5
 
