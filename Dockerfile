@@ -1,4 +1,4 @@
-FROM alpine:3.22.2
+FROM alpine:3.23.3
 
 # Basic ENVs :
 ENV LC_ALL="en_US.UTF-8"
