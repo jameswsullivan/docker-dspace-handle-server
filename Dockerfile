@@ -56,7 +56,7 @@ COPY handle-9.3.3 /hs/handle-9.3.3
 
 RUN rm -f /hs/handle-9.3.3/bin/hdl
 
-COPY dspace-remote-handle-resolver-1.0.jar /hs/handle-9.3.3/lib/
+COPY dspace-remote-handle-resolver-1.1-SNAPSHOT.jar /hs/handle-9.3.3/lib/
 COPY hdl /hs/handle-9.3.3/bin/
 
 # Generate hdl setup server answer file :
