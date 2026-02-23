@@ -86,7 +86,7 @@ RUN rm -rf /hs/svr_1/* && \
     rm -f /hs/svr_1/config.dct
 
 COPY config.dct /hs/svr_1/
-COPY log4j-handle-plugin.properties /hs/svr_1/
+COPY log4j2-handle-plugin.xml /hs/svr_1/
 COPY handle-dspace-plugin.cfg /hs/svr_1/
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 
