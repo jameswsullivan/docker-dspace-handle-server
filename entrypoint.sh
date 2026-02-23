@@ -1,47 +1,49 @@
 #!/bin/bash
 
-echo 'Configuring "/hs/svr_1/config.dct" :'
+CONFIG_DCT="/${HANDLE_SERVER_DIR}/${SERVER_NAME}/config.dct"
+
+echo 'Configuring "${CONFIG_DCT}" :'
 echo
-echo '"/hs/svr_1/config.dct" content before :'
+echo "\"${CONFIG_DCT}\" content before :"
 echo
 
-cat /hs/svr_1/config.dct
+cat ${CONFIG_DCT}
 echo
 
-sed -i "s/BIND_IP/${BIND_IP}/g" /hs/svr_1/config.dct
-sed -i "s/HTTP_PORT/${HTTP_PORT}/g" /hs/svr_1/config.dct
-sed -i "s/LOG_ACCESS/${LOG_ACCESS}/g" /hs/svr_1/config.dct
-sed -i "s/TCP_UDP_PORT/${TCP_UDP_PORT}/g" /hs/svr_1/config.dct
-sed -i "s/LOG_ROTATION_FREQUENCY_LONG/${LOG_ROTATION_FREQUENCY_LONG}/g" /hs/svr_1/config.dct
-sed -i "s|PREFIXES_ADMINS|${PREFIXES_ADMINS}|g" /hs/svr_1/config.dct
-sed -i "s|HANDLE_PREFIXES|${HANDLE_PREFIXES}|g" /hs/svr_1/config.dct
+sed -i "s/BIND_IP/${BIND_IP}/g" ${CONFIG_DCT}
+sed -i "s/HTTP_PORT/${HTTP_PORT}/g" ${CONFIG_DCT}
+sed -i "s/LOG_ACCESS/${LOG_ACCESS}/g" ${CONFIG_DCT}
+sed -i "s/TCP_UDP_PORT/${TCP_UDP_PORT}/g" ${CONFIG_DCT}
+sed -i "s/LOG_ROTATION_FREQUENCY_LONG/${LOG_ROTATION_FREQUENCY_LONG}/g" ${CONFIG_DCT}
+sed -i "s|PREFIXES_ADMINS|${PREFIXES_ADMINS}|g" ${CONFIG_DCT}
+sed -i "s|HANDLE_PREFIXES|${HANDLE_PREFIXES}|g" ${CONFIG_DCT}
 
-echo '"/hs/svr_1/config.dct" content after :'
+echo "\"${CONFIG_DCT}\" content after :"
 echo
 
-cat /hs/svr_1/config.dct
+cat ${CONFIG_DCT}
 echo
 
-echo 'Configuring "/hs/svr_1/handle-dspace-plugin.cfg" :'
+echo "Configuring \"/${HANDLE_SERVER_DIR}/${SERVER_NAME}/handle-dspace-plugin.cfg\" :"
 echo
 
-cat /hs/svr_1/handle-dspace-plugin.cfg
+cat /${HANDLE_SERVER_DIR}/${SERVER_NAME}/handle-dspace-plugin.cfg
 echo
 
-printf "%b" "$DSPACE_SERVER_URLS" > /hs/svr_1/handle-dspace-plugin.cfg
+printf "%b" "${DSPACE_SERVER_URLS}" > /${HANDLE_SERVER_DIR}/${SERVER_NAME}/handle-dspace-plugin.cfg
 
 echo
-cat /hs/svr_1/handle-dspace-plugin.cfg
+cat /${HANDLE_SERVER_DIR}/${SERVER_NAME}/handle-dspace-plugin.cfg
 echo
 echo
 
-echo 'Done configuring "/hs/svr_1/handle-dspace-plugin.cfg" .'
+echo "Done configuring \"/${HANDLE_SERVER_DIR}/${SERVER_NAME}/handle-dspace-plugin.cfg\" ."
 echo
 
-echo 'Starting handle-server: "/hs/handle-9.3.3/bin/hdl-server /hs/svr_1"'
+echo "Starting handle-server: \"/${HANDLE_SERVER_DIR}/handle-${HANDLE_SOFTWARE_VER}/bin/hdl-server /${HANDLE_SERVER_DIR}/${SERVER_NAME}\""
 echo
 
-/hs/handle-9.3.3/bin/hdl-server /hs/svr_1 &
+/${HANDLE_SERVER_DIR}/handle-${HANDLE_SOFTWARE_VER}/bin/hdl-server /${HANDLE_SERVER_DIR}/${SERVER_NAME} &
 
 sleep 5
 
@@ -51,7 +53,8 @@ echo
 netstat -tulnp
 
 echo
-echo 'Logs files are under: "/hs/svr_1/logs"'
+echo "Logs files are under: \"/${HANDLE_SERVER_DIR}/${SERVER_NAME}/logs\""
 echo
 
 tail -f /dev/null
+

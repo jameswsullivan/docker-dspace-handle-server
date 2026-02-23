@@ -1,12 +1,15 @@
-FROM alpine:3.23.3
+ARG ALPINE_VERSION
 
-# Basic ENVs :
-ENV LC_ALL="en_US.UTF-8"
-ENV LANG="en_US.UTF-8"
-ENV LANGUAGE="en_US.UTF-8"
-ENV TZ="America/Chicago"
+FROM alpine:${ALPINE_VERSION}
 
-# Build args (for config.dct) :
+ARG OPT_PACKAGES
+ARG HANDLE_SOFTWARE_VER
+ARG JAVA_VERSION
+ARG DSPACE_REMOTE_HANDLE_RESOLVER_ARTIFACT
+ARG HANDLE_SERVER_DIR
+ARG SERVER_NAME
+
+# ==== HANDLE SERVER SETUP ====
 ARG PRIMARY_SERVER
 ARG DUAL_STACK_SERVER
 ARG IP_ADDRESS
@@ -30,8 +33,13 @@ ARG HANDLE_PREFIXES
 ARG LOG_ROTATION_FREQUENCY_LONG
 ARG DSPACE_SERVER_URLS
 ARG JAVA_OPTS
+# ==== HANDLE SERVER SETUP ====
 
-# Configurable settings in config.dct :
+ENV LC_ALL="en_US.UTF-8"
+ENV LANG="en_US.UTF-8"
+ENV TZ="America/Chicago"
+
+# ==== configurable settings in config.dct ====
 ENV BIND_IP=${BIND_IP}
 ENV HTTP_PORT=${HTTP_PORT}
 ENV LOG_ACCESS=${LOG_ACCESS}
@@ -41,57 +49,64 @@ ENV HANDLE_PREFIXES=${HANDLE_PREFIXES}
 ENV LOG_ROTATION_FREQUENCY_LONG=${LOG_ROTATION_FREQUENCY_LONG}
 ENV DSPACE_SERVER_URLS=${DSPACE_SERVER_URLS}
 ENV JAVA_OPTS=${JAVA_OPTS}
+# ==== configurable settings in config.dct ====
+
+ENV HANDLE_SOFTWARE_VER=${HANDLE_SOFTWARE_VER}
+ENV HANDLE_SERVER_DIR={HANDLE_SERVER_DIR}
+ENV SERVER_NAME={SERVER_NAME}
 
 # Install basic packages :
 RUN apk update && apk upgrade && \
-    apk add --no-cache musl-locales musl-locales-lang tzdata ca-certificates && \
-    apk add --no-cache curl wget nano unzip git bash && \
-    update-ca-certificates
+    apk add --no-cache tzdata ca-certificates openjdk${JAVA_VERSION}-jre-headless ${OPT_PACKAGES} && \
+    update-ca-certificates && \
+    rm -rf /var/cache/apk/*
 
-# Install handle-server :
-RUN apk add --no-cache openjdk21-jdk && \
-    mkdir /hs /hs/svr_1 /hs/svr_1/logs
+# Install and configure handle-server :
+RUN mkdir -p /${HANDLE_SERVER_DIR}/${SERVER_NAME}/
 
-COPY handle-9.3.3 /hs/handle-9.3.3
+COPY handle-${HANDLE_SOFTWARE_VER} /${HANDLE_SERVER_DIR}/handle-${HANDLE_SOFTWARE_VER}
 
-RUN rm -f /hs/handle-9.3.3/bin/hdl
+RUN rm -f /${HANDLE_SERVER_DIR}/handle-${HANDLE_SOFTWARE_VER}/bin/hdl
 
-COPY dspace-remote-handle-resolver-1.1-SNAPSHOT.jar /hs/handle-9.3.3/lib/
-COPY hdl /hs/handle-9.3.3/bin/
+COPY ${DSPACE_REMOTE_HANDLE_RESOLVER_ARTIFACT} /${HANDLE_SERVER_DIR}/handle-${HANDLE_SOFTWARE_VER}/lib/
+COPY hdl /${HANDLE_SERVER_DIR}/handle-${HANDLE_SOFTWARE_VER}/bin/
 
 # Generate hdl setup server answer file :
-RUN touch /hs/hdl-setup-server-answers.txt && \
-    echo ${PRIMARY_SERVER} >> /hs/hdl-setup-server-answers.txt && \
-    echo ${DUAL_STACK_SERVER} >> /hs/hdl-setup-server-answers.txt && \
-    echo ${IP_ADDRESS} >> /hs/hdl-setup-server-answers.txt && \
-    echo ${BIND_IP} >> /hs/hdl-setup-server-answers.txt && \
-    echo ${TCP_UDP_PORT} >> /hs/hdl-setup-server-answers.txt && \
-    echo ${HTTP_PORT} >> /hs/hdl-setup-server-answers.txt && \
-    echo ${LOG_ACCESS} >> /hs/hdl-setup-server-answers.txt && \
-    echo ${LOG_ROTATION_FREQUENCY_SHORT} >> /hs/hdl-setup-server-answers.txt && \
-    echo ${SITE_VERSION_SERIAL_NUMBER} >> /hs/hdl-setup-server-answers.txt && \
-    echo ${SERVER_DESCRIPTION} >> /hs/hdl-setup-server-answers.txt && \
-    echo ${ORG_NAME} >> /hs/hdl-setup-server-answers.txt && \
-    echo ${ORG_CONTACT_PERSON} >> /hs/hdl-setup-server-answers.txt && \
-    echo ${ORG_CONTACT_PHONE} >> /hs/hdl-setup-server-answers.txt && \
-    echo ${ORG_CONTACT_EMAIL} >> /hs/hdl-setup-server-answers.txt && \
-    echo ${DISABLE_UDP} >> /hs/hdl-setup-server-answers.txt && \
-    echo ${ENCRYPT_SERVER_KEY} >> /hs/hdl-setup-server-answers.txt && \
-    echo ${ENCRYPT_ADMIN_KEY} >> /hs/hdl-setup-server-answers.txt && \
-    cat /hs/hdl-setup-server-answers.txt
+RUN ANSWER_FILE="/${HANDLE_SERVER_DIR}/answer-file.txt"
+    echo ${PRIMARY_SERVER} >> ${ANSWER_FILE} && \
+    echo ${DUAL_STACK_SERVER} >> ${ANSWER_FILE} && \
+    echo ${IP_ADDRESS} >> ${ANSWER_FILE} && \
+    echo ${BIND_IP} >> ${ANSWER_FILE} && \
+    echo ${TCP_UDP_PORT} >> ${ANSWER_FILE} && \
+    echo ${HTTP_PORT} >> ${ANSWER_FILE} && \
+    echo ${LOG_ACCESS} >> ${ANSWER_FILE} && \
+    echo ${LOG_ROTATION_FREQUENCY_SHORT} >> ${ANSWER_FILE} && \
+    echo ${SITE_VERSION_SERIAL_NUMBER} >> ${ANSWER_FILE} && \
+    echo ${SERVER_DESCRIPTION} >> ${ANSWER_FILE} && \
+    echo ${ORG_NAME} >> ${ANSWER_FILE} && \
+    echo ${ORG_CONTACT_PERSON} >> ${ANSWER_FILE} && \
+    echo ${ORG_CONTACT_PHONE} >> ${ANSWER_FILE} && \
+    echo ${ORG_CONTACT_EMAIL} >> ${ANSWER_FILE} && \
+    echo ${DISABLE_UDP} >> ${ANSWER_FILE} && \
+    echo ${ENCRYPT_SERVER_KEY} >> ${ANSWER_FILE} && \
+    echo ${ENCRYPT_ADMIN_KEY} >> ${ANSWER_FILE} && \
+    cat ${ANSWER_FILE}
 
 # Configure handle server configs :
-RUN rm -rf /hs/svr_1/* && \
-    /hs/handle-9.3.3/bin/hdl-setup-server /hs/svr_1 < /hs/hdl-setup-server-answers.txt && \
-    rm -f /hs/svr_1/config.dct
+RUN rm -rf /${HANDLE_SERVER_DIR}/${SERVER_NAME}/* && \
+    /${HANDLE_SERVER_DIR}/handle-${HANDLE_SOFTWARE_VER}/bin/hdl-setup-server \
+    /${HANDLE_SERVER_DIR}/${SERVER_NAME} < ${ANSWER_FILE} && \
+    rm -f /${HANDLE_SERVER_DIR}/${SERVER_NAME}/config.dct && \
+    mkdir -p /${HANDLE_SERVER_DIR}/${SERVER_NAME}/logs
 
-COPY config.dct /hs/svr_1/
-COPY log4j-handle-plugin.properties /hs/svr_1/
-COPY handle-dspace-plugin.cfg /hs/svr_1/
+COPY config.dct /${HANDLE_SERVER_DIR}/${SERVER_NAME}/
+COPY log4j2-handle-plugin.xml /${HANDLE_SERVER_DIR}/${SERVER_NAME}/
+COPY handle-dspace-plugin.cfg /${HANDLE_SERVER_DIR}/${SERVER_NAME}/
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
-WORKDIR /hs/svr_1
+WORKDIR /${HANDLE_SERVER_DIR}/${SERVER_NAME}
 
 ENTRYPOINT ["entrypoint.sh"]
+

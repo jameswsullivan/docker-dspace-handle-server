@@ -4,10 +4,17 @@ services:
 
   dspace-handle-server:
     container_name: dspace-handle-server
-    image: ${IMAGE_FULL_TAG}
+    image: ${IMAGE_TAG}
     build:
       context: .
       args:
+        - ALPINE_VERSION=3.23.3
+        - OPT_PACKAGES=${OPT_PACKAGES}
+        - HANDLE_SOFTWARE_VER=${HANDLE_SOFTWARE_VER}
+        - JAVA_VERSION=${JAVA_VERSION}
+        - DSPACE_REMOTE_HANDLE_RESOLVER_ARTIFACT=${DSPACE_REMOTE_HANDLE_RESOLVER_ARTIFACT}
+        - HANDLE_SERVER_DIR=${HANDLE_SERVER_DIR}
+        - SERVER_NAME=${SERVER_NAME}
         - PRIMARY_SERVER=${PRIMARY_SERVER}
         - DUAL_STACK_SERVER=${DUAL_STACK_SERVER}
         - IP_ADDRESS=${IP_ADDRESS}
@@ -43,9 +50,13 @@ services:
       LOG_ROTATION_FREQUENCY_LONG: ${LOG_ROTATION_FREQUENCY_LONG}
       DSPACE_SERVER_URLS: ${DSPACE_SERVER_URLS}
       JAVA_OPTS: ${JAVA_OPTS}
+      HANDLE_SOFTWARE_VER: ${HANDLE_SOFTWARE_VER}
+      HANDLE_SERVER_DIR: ${HANDLE_SERVER_DIR}
+      SERVER_NAME: ${SERVER_NAME}
     volumes:
-      - logs:/hs/svr_1/logs
+      - logs:/${HANDLE_SERVER_DIR}/${SERVER_NAME}/logs
 
 volumes:
   logs:
     driver: local
+
