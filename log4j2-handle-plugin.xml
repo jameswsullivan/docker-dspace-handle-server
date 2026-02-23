@@ -3,8 +3,8 @@
 
     <Appenders>
         <RollingFile name="HandlePluginFile"
-                     fileName="/hs/svr_1/logs/handle-plugin.log"
-                     filePattern="/hs/svr_1/logs/handle-plugin.log. %d{yyyy-MM-dd}">
+                     fileName="/hs/srv_1/logs/handle-plugin.log"
+                     filePattern="/hs/srv_1/logs/handle-plugin.log. %d{yyyy-MM-dd}">
 
             <PatternLayout pattern="%d %-5p %c @ %m%n"/>
 
