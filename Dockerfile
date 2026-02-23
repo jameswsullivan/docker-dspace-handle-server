@@ -52,8 +52,8 @@ ENV JAVA_OPTS=${JAVA_OPTS}
 # ==== configurable settings in config.dct ====
 
 ENV HANDLE_SOFTWARE_VER=${HANDLE_SOFTWARE_VER}
-ENV HANDLE_SERVER_DIR={HANDLE_SERVER_DIR}
-ENV SERVER_NAME={SERVER_NAME}
+ENV HANDLE_SERVER_DIR=${HANDLE_SERVER_DIR}
+ENV SERVER_NAME=${SERVER_NAME}
 
 # Install basic packages :
 RUN apk update && apk upgrade && \
@@ -94,6 +94,7 @@ RUN ANSWER_FILE="/${HANDLE_SERVER_DIR}/answer-file.txt" && \
 
 # Configure handle server configs :
 RUN rm -rf /${HANDLE_SERVER_DIR}/${SERVER_NAME}/* && \
+    ANSWER_FILE="/${HANDLE_SERVER_DIR}/answer-file.txt" && \
     /${HANDLE_SERVER_DIR}/handle-${HANDLE_SOFTWARE_VER}/bin/hdl-setup-server \
     /${HANDLE_SERVER_DIR}/${SERVER_NAME} < ${ANSWER_FILE} && \
     rm -f /${HANDLE_SERVER_DIR}/${SERVER_NAME}/config.dct && \

@@ -2,7 +2,7 @@
 
 CONFIG_DCT="/${HANDLE_SERVER_DIR}/${SERVER_NAME}/config.dct"
 
-echo 'Configuring "${CONFIG_DCT}" :'
+echo "Configuring \"${CONFIG_DCT}\" :"
 echo
 echo "\"${CONFIG_DCT}\" content before :"
 echo
