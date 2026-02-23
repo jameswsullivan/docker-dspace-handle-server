@@ -72,7 +72,7 @@ COPY ${DSPACE_REMOTE_HANDLE_RESOLVER_ARTIFACT} /${HANDLE_SERVER_DIR}/handle-${HA
 COPY hdl /${HANDLE_SERVER_DIR}/handle-${HANDLE_SOFTWARE_VER}/bin/
 
 # Generate hdl setup server answer file :
-RUN ANSWER_FILE="/${HANDLE_SERVER_DIR}/answer-file.txt"
+RUN ANSWER_FILE="/${HANDLE_SERVER_DIR}/answer-file.txt" && \
     echo ${PRIMARY_SERVER} >> ${ANSWER_FILE} && \
     echo ${DUAL_STACK_SERVER} >> ${ANSWER_FILE} && \
     echo ${IP_ADDRESS} >> ${ANSWER_FILE} && \
